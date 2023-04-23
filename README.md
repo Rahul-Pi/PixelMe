@@ -2,6 +2,9 @@
 
 PixelMe is a tool which allows users to classify images and videos into different categories. This is to label the dataset for image classification algorithm development.
 
+![image](./assets/GUI.png)
+
+
 # Setup
 To classify all the images within a folder simply use the command
 ```
