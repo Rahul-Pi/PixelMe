@@ -13,8 +13,9 @@ class image_player(tk.Frame):
     def __init__(self, container):
         super().__init__(container)
 
-        self.image_update_val = 30
+        self.image_update_val = 500 # The time interval between each frame update in ms
         self.cur_image_index = 0
+        self.image_list = []
 
         # Read an image using opencv
         self.cur_image_path = os.path.join(".","assets","intro.png")
@@ -50,16 +51,18 @@ class image_player(tk.Frame):
 
         self.grid(column=2, row=0, columnspan=5, rowspan = 4, padx=5, pady=5, sticky='s')
 
+        # Bind the keys to the functions
         for i in range(1,len(app.sub_class_list)+1):
                 app.bind(str(i), self.num_key_press)
         app.bind("<Right>", self.right_key_press)
         app.bind("<Left>", self.left_key_press)
 
-
+    # When the help button is pressed
     def help_btn_browser(self):
         # webbrowser.open(r"https://www.google.com",autoraise=True)
         pass
-
+    
+    # Update the frame
     def frame_update(self):
         try:
             self.OCV_image = cv2.imread(self.cur_image_path)
@@ -99,16 +102,18 @@ class image_player(tk.Frame):
     # When the right arrow key is pressed: Display the next image
     def right_key_press(self, event):
         # Ensure that there are more images to be displayed
-        if self.cur_image_index < len(self.image_list)-1:
-            self.cur_image_index += 1
-            self.cur_image_path = os.path.join(self.file_path,self.image_list[self.cur_image_index])
+        if len(self.image_list) > 0:
+            if self.cur_image_index < len(self.image_list)-1:
+                self.cur_image_index += 1
+                self.cur_image_path = os.path.join(self.file_path,self.image_list[self.cur_image_index])
     
     # When the left arrow key is pressed: Display the previous image
     def left_key_press(self, event):
         # Ensure that there are more images to be displayed
-        if self.cur_image_index > 0:
-            self.cur_image_index -= 1
-            self.cur_image_path = os.path.join(self.file_path,self.image_list[self.cur_image_index])
+        if len(self.image_list) > 0:
+            if self.cur_image_index > 0:
+                self.cur_image_index -= 1
+                self.cur_image_path = os.path.join(self.file_path,self.image_list[self.cur_image_index])
 
         
 # When playing the video: The timer class (Used to exit the thread without errors)
@@ -169,9 +174,7 @@ class video_player(tk.Frame):
         self.videolabel.pack(fill=tk.BOTH,expand=1)
         self.videopanel.pack(side=tk.BOTTOM,fill=tk.BOTH, expand=1, padx=[0,10])
 
-        
         videoplayers.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
-
 
         # The side frame which include the video playback speed and the help button
         self.side_tab = ttk.Frame(self)
@@ -179,7 +182,6 @@ class video_player(tk.Frame):
         # Help button
         self.help_btn = tk.Button(self.side_tab, text="Help", font='sans 10 bold', height=2, width=12, background="#343434", foreground="white", command = self.help_btn_browser)
         self.help_btn.pack(side=tk.BOTTOM,expand=1, padx=[10,0], pady=[10,50])
-        
         
         # The logos
         # The logo is created using the icons from https://www.flaticon.com/free-icons/schedule and https://www.flaticon.com/free-icons/professions-and-jobs
@@ -204,6 +206,7 @@ class video_player(tk.Frame):
 
         self.grid(column=2, row=0, columnspan=5, rowspan = 4, padx=5, pady=5, sticky='s')
 
+        # Bind the keys
         for i in range(1,len(app.sub_class_list)+1):
                 app.bind(str(i), self.num_key_press)
         app.bind("<space>", self.space_key_press)
